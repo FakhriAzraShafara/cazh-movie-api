@@ -1,3 +1,52 @@
+# Cazh Movie API
+
+## Installation
+
+1. Clone the repository
+2. Install dependencies: `composer install`
+3. Copy `.env.example` to `.env` and update the configuration
+4. Generate application key: `php artisan key:generate`
+5. Run database migrations: `php artisan migrate`
+6. Seed the database: `php artisan db:seed`
+
+## Running the Application
+
+1. Start the development server: `php artisan serve`
+2. The API will be available at `http://localhost:8000/api`
+
+## API Endpoints
+
+### 1. Create Movie
+- **URL:** `POST /api/movies`
+- **Authentication:** Required
+- **Request Body:** `{ "title": "Movie Title", "description": "Movie description", "release_year": 2023, "user_id": 1 }`
+- **Validations:** `title` (required, max 255 chars), `description` (optional, string), `release_year` (optional, integer, max current year), `user_id` (required, must exist)
+
+### 2. Update Movie
+- **URL:** `PUT /api/movies/{id}`
+- **Authentication:** Required
+- **Request Body:** (Same as Create Movie)
+- **Behavior:** Updates movie details, resynchronizes OMDb movie details
+
+### 3. Delete Movie
+- **URL:** `DELETE /api/movies/{id}`
+- **Authentication:** Required
+- **Behavior:** Deletes movie, cascades deletion to related reviews and movie details
+
+### 4. List Movies
+- **URL:** `GET /api/movies`
+- **Authentication:** Required
+- **Query Parameters:** `user_id` (required), `title` (optional), `sort_by` (optional: title, release_year), `sort_order` (optional: asc, desc)
+- **Response Format:** Includes movie details, user information, and reviews
+
+### 5. Create Review
+- **URL:** `POST /api/reviews`
+- **Authentication:** Required
+- **Request Body:** `{ "movie_id": 1, "user_id": 2, "rating": 4, "comment": "Great movie!" }`
+- **Validations:** `movie_id` (required, must exist), `user_id` (required, must exist), `rating` (required, 1-5), `comment` (optional)
+
+For more details, please refer to the comprehensive [API Documentation](api-documentation.md).
+
 # Cazh Movie API Documentation
 
 ## Overview
