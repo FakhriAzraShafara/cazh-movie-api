@@ -45,8 +45,6 @@
 - **Request Body:** `{ "movie_id": 1, "user_id": 2, "rating": 4, "comment": "Great movie!" }`
 - **Validations:** `movie_id` (required, must exist), `user_id` (required, must exist), `rating` (required, 1-5), `comment` (optional)
 
-For more details, please refer to the comprehensive [API Documentation](api-documentation.md).
-
 # Cazh Movie API Documentation
 
 ## Overview
