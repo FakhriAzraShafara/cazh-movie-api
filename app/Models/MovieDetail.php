@@ -6,7 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class MovieDetail extends Model
 {
-    public function movie(){
+    protected $fillable = [
+        'movie_id', 'imdb_id', 'genre', 'director', 
+        'actors', 'plot', 'runtime'
+    ];
+
+    public function movie()
+    {
         return $this->belongsTo(Movie::class);
     }
 }
