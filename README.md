@@ -1,4 +1,4 @@
-# Movie API Documentation
+# Cazh Movie API Documentation
 
 ## Overview
 This API allows users to manage movies, including creation, retrieval, updating, and deletion of movie records, along with review functionality.
@@ -132,7 +132,7 @@ This API allows users to manage movies, including creation, retrieval, updating,
 - Input validation at request level
 
 
-#Develop with Laravel
+# Develop with Laravel
 
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
