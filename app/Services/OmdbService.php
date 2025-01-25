@@ -3,25 +3,43 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
-// app/Services/OmdbService.php
-class OmdbService{
-    public function getMovieDetails($title, $year = null){
+class OmdbService
+{
+    public function getMovieDetails($title, $year = null)
+    {
         $apiKey = config('app.omdb_api');
-        $url = "https://www.omdbapi.com/?i=tt3896198&apikey={$apiKey}".urlencode($title);
+        $url = "http://www.omdbapi.com/?apikey={$apiKey}&t=" . urlencode($title);
 
-        if ($year){
-            $url .= ".&y={$year}";
+        if ($year) {
+            $url .= "&y={$year}";
         }
 
-        $response = Http::get($url);
+        try {
+            $response = Http::timeout(10)->get($url);
 
-        if($response->successful()){
-            return $response->json();
+            if ($response->successful()) {
+                $data = $response->json();
+                
+                // Additional validation
+                if (isset($data['Response']) && $data['Response'] === 'True') {
+                    return $data;
+                }
+                
+                Log::warning('OMDb API returned no results', [
+                    'title' => $title,
+                    'year' => $year
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('OMDb API request failed', [
+                'error' => $e->getMessage(),
+                'title' => $title,
+                'year' => $year
+            ]);
         }
 
-        return [
-            'error' => 'failed to fetch movie details. Plase Try again'
-        ];
+        return null;
     }
 }
