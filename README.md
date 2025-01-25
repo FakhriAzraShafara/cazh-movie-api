@@ -1,3 +1,140 @@
+# Movie API Documentation
+
+## Overview
+This API allows users to manage movies, including creation, retrieval, updating, and deletion of movie records, along with review functionality.
+
+## Authentication
+- **Mechanism:** API Key Authentication
+- **Header:** `X-API-KEY`
+- **Required:** All endpoints
+
+## Endpoints
+
+### 1. Create Movie
+- **URL:** `POST /api/movies`
+- **Authentication:** Required
+- **Request Body:**
+```json
+{
+    "title": "Movie Title",
+    "description": "Movie description",
+    "release_year": 2023,
+    "user_id": 1
+}
+```
+- **Validations:**
+  - `title`: Required, max 255 characters
+  - `description`: Optional, string
+  - `release_year`: Optional, integer, max current year
+  - `user_id`: Required, must exist in users table
+
+### 2. Update Movie
+- **URL:** `PUT /api/movies/{id}`
+- **Authentication:** Required
+- **Request Body:** (Same as Create Movie)
+- **Behavior:** 
+  - Updates movie details
+  - Resynchronizes OMDb movie details
+
+### 3. Delete Movie
+- **URL:** `DELETE /api/movies/{id}`
+- **Authentication:** Required
+- **Behavior:** 
+  - Deletes movie
+  - Cascades deletion to related reviews and movie details
+
+### 4. List Movies
+- **URL:** `GET /api/movies`
+- **Authentication:** Required
+- **Query Parameters:**
+  - `user_id`: *Required*
+  - `title`: Optional (partial title search)
+  - `sort_by`: Optional (title, release_year)
+  - `sort_order`: Optional (asc, desc, default: asc)
+  - `per_page`: Optional (default: 10)
+
+#### Sorting Behavior
+- Default: Sorted by movie ID ascending
+- Custom sorting when parameters provided
+  - `sort_by=title`: Alphabetical sorting
+  - `sort_by=release_year`: Year-based sorting
+
+#### Search Example
+- `/api/movies?user_id=1&title=Inception&sort_by=release_year&sort_order=desc`
+
+#### Response Format
+```json
+[
+  {
+    "id": 1,
+    "title": "Inception",
+    "description": "Mind-bending thriller",
+    "release_year": 2010,
+    "details": {
+      "imdb_id": "tt1375666",
+      "genre": "Action, Sci-Fi",
+      "director": "Christopher Nolan",
+      "actors": "Leonardo DiCaprio, Joseph Gordon-Levitt",
+      "plot": "Corporate secret stealing adventure",
+      "runtime": "148 min"
+    },
+    "users": {
+      "id": 1,
+      "name": "User Name",
+      "email": "user@example.com"
+    },
+    "reviews": [
+      {
+        "user_id": 2,
+        "rating": 5,
+        "comment": "Amazing movie!"
+      }
+    ]
+  }
+]
+```
+
+### 5. Create Review
+- **URL:** `POST /api/reviews`
+- **Authentication:** Required
+- **Request Body:**
+```json
+{
+    "movie_id": 1,
+    "user_id": 2,
+    "rating": 4,
+    "comment": "Great movie!"
+}
+```
+- **Validations:**
+  - `movie_id`: Required, must exist
+  - `user_id`: Required, must exist
+  - `rating`: Required, integer between 1-5
+  - `comment`: Optional
+
+## Error Handling
+- **400:** Validation Errors
+- **401:** Unauthorized (Invalid API Key)
+- **404:** Resource Not Found
+
+## External Integration
+- Uses OMDb API for movie details retrieval
+- Automatically fetches and stores additional movie information
+
+## Performance Notes
+- Search is case-insensitive
+- Partial title matching supported
+- Default sorting prevents unnecessary alphabetical ordering
+
+## Security
+- API key required for all endpoints
+- User-specific data access
+- Input validation at request level
+
+
+#Develop with Laravel
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
